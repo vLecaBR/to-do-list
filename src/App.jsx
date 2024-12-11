@@ -1,22 +1,10 @@
-// src/App.js
-import React, { useState, useEffect } from 'react';
-import TodoColumn from './components/TodoColumn/TodoColumn';
+// src/App.jsx
+import React, { useState } from 'react';
+import TodoColumn from './components/TodoColumn';
 import GlobalStyle from './globalStyles';
-import { DragDropContext } from 'react-beautiful-dnd';
 
 function App() {
   const [todos, setTodos] = useState([]);
-
-  useEffect(() => {
-    const storedTodos = JSON.parse(localStorage.getItem("todos"));
-    if (storedTodos) {
-      setTodos(storedTodos);
-    }
-  }, []);
-
-  useEffect(() => {
-    localStorage.setItem("todos", JSON.stringify(todos));
-  }, [todos]);
 
   const addTodo = (text) => {
     const newTodo = {
@@ -35,20 +23,7 @@ function App() {
     setTodos(todos.filter(todo => todo.id !== id));
   };
 
-  const onDragEnd = (result) => {
-    const { destination, source } = result;
-
-    if (!destination) return;
-
-    const newTodos = Array.from(todos);
-    const movedTodo = newTodos[source.index];
-    movedTodo.status = destination.droppableId;
-    newTodos.splice(source.index, 1);
-    newTodos.splice(destination.index, 0, movedTodo);
-
-    setTodos(newTodos);
-  };
-
+  // Organiza as tarefas em três grupos (pendente, em andamento, concluída)
   const columns = {
     pending: todos.filter(todo => todo.status === 'pending'),
     inProgress: todos.filter(todo => todo.status === 'in-progress'),
@@ -56,32 +31,29 @@ function App() {
   };
 
   return (
-    <DragDropContext onDragEnd={onDragEnd}>
+    <>
       <GlobalStyle />
       <div style={{ display: 'flex', gap: '20px' }}>
         <TodoColumn
           title="Pendente"
           todos={columns.pending}
-          columnId="pending"
           updateStatus={updateStatus}
           deleteTodo={deleteTodo}
         />
         <TodoColumn
           title="Em andamento"
           todos={columns.inProgress}
-          columnId="inProgress"
           updateStatus={updateStatus}
           deleteTodo={deleteTodo}
         />
         <TodoColumn
           title="Concluída"
           todos={columns.completed}
-          columnId="completed"
           updateStatus={updateStatus}
           deleteTodo={deleteTodo}
         />
       </div>
-    </DragDropContext>
+    </>
   );
 }
 
