@@ -1,58 +1,105 @@
-// src/App.jsx
-import React, { useState } from 'react';
-import TodoColumn from './components/TodoColumn';
-import GlobalStyle from './globalStyles';
+import React, { useState } from "react";
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import TodoColumn from "./components/TodoColumn";
+import Modal from "./components/Modal";
+import GlobalStyle from "./globalStyles";
 
 function App() {
   const [todos, setTodos] = useState([]);
+  const [showModal, setShowModal] = useState(false);
+  const [currentTodo, setCurrentTodo] = useState(null);
 
-  const addTodo = (text) => {
+  const addTodo = (column) => {
     const newTodo = {
       id: Date.now(),
-      text: text,
-      status: 'pending', // Inicialmente todas as tarefas começam como "pendente"
+      text: "",
+      status: column,
+      startDate: null,
+      endDate: null,
     };
     setTodos([...todos, newTodo]);
   };
 
-  const updateStatus = (id, newStatus) => {
-    setTodos(todos.map(todo => todo.id === id ? { ...todo, status: newStatus } : todo));
+  const updateTodo = (id, updatedTodo) => {
+    setTodos(todos.map(todo => (todo.id === id ? updatedTodo : todo)));
+    setShowModal(false);
   };
 
-  const deleteTodo = (id) => {
-    setTodos(todos.filter(todo => todo.id !== id));
+  const markAsCompleted = (id) => {
+    setTodos(todos.map(todo => 
+      todo.id === id ? { ...todo, status: "completed" } : todo
+    ));
   };
 
-  // Organiza as tarefas em três grupos (pendente, em andamento, concluída)
+  const handleDragEnd = (result) => {
+    const { destination, source } = result;
+    if (!destination) return;
+
+    const updatedTodos = [...todos];
+    const [removed] = updatedTodos.splice(source.index, 1);
+    removed.status = destination.droppableId;
+    updatedTodos.splice(destination.index, 0, removed);
+
+    setTodos(updatedTodos);
+  };
+
   const columns = {
-    pending: todos.filter(todo => todo.status === 'pending'),
-    inProgress: todos.filter(todo => todo.status === 'in-progress'),
-    completed: todos.filter(todo => todo.status === 'completed'),
+    pending: todos.filter(todo => todo.status === "pending"),
+    inProgress: todos.filter(todo => todo.status === "in-progress"),
+    completed: todos.filter(todo => todo.status === "completed"),
   };
 
   return (
     <>
       <GlobalStyle />
-      <div style={{ display: 'flex', gap: '20px' }}>
-        <TodoColumn
-          title="Pendente"
-          todos={columns.pending}
-          updateStatus={updateStatus}
-          deleteTodo={deleteTodo}
+      <DragDropContext onDragEnd={handleDragEnd}>
+        <div style={{ display: "flex", gap: "20px", padding: "20px" }}>
+          <Droppable droppableId="pending">
+            {(provided) => (
+              <TodoColumn
+                title="Pendente"
+                todos={columns.pending}
+                addTodo={() => addTodo("pending")}
+                markAsCompleted={markAsCompleted}
+                updateTodo={setCurrentTodo}
+                provided={provided}
+              />
+            )}
+          </Droppable>
+          <Droppable droppableId="inProgress">
+            {(provided) => (
+              <TodoColumn
+                title="Em andamento"
+                todos={columns.inProgress}
+                addTodo={() => addTodo("in-progress")}
+                markAsCompleted={markAsCompleted}
+                updateTodo={setCurrentTodo}
+                provided={provided}
+              />
+            )}
+          </Droppable>
+          <Droppable droppableId="completed">
+            {(provided) => (
+              <TodoColumn
+                title="Concluída"
+                todos={columns.completed}
+                addTodo={() => addTodo("completed")}
+                markAsCompleted={markAsCompleted}
+                updateTodo={setCurrentTodo}
+                provided={provided}
+              />
+            )}
+          </Droppable>
+        </div>
+      </DragDropContext>
+
+      {showModal && (
+        <Modal
+          todo={currentTodo}
+          updateTodo={updateTodo}
+          setShowModal={setShowModal}
         />
-        <TodoColumn
-          title="Em andamento"
-          todos={columns.inProgress}
-          updateStatus={updateStatus}
-          deleteTodo={deleteTodo}
-        />
-        <TodoColumn
-          title="Concluída"
-          todos={columns.completed}
-          updateStatus={updateStatus}
-          deleteTodo={deleteTodo}
-        />
-      </div>
+      )}
     </>
   );
 }

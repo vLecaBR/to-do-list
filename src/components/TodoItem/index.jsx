@@ -1,24 +1,11 @@
-// src/components/TodoItem/TodoItem.jsx
-import React from 'react';
-import { TodoItemContainer, TodoText, Button } from './TodoItem.styles';
+import React from "react";
+import { TodoItemContainer, TodoText, TodoCircle } from "./TodoItem.styles";
 
-const TodoItem = ({ todo, updateStatus, deleteTodo }) => {
-  const { id, text, status } = todo;
-
+const TodoItem = ({ todo, markAsCompleted, updateTodo, provided }) => {
   return (
-    <TodoItemContainer>
-      <TodoText completed={status === 'completed'}>
-        {text}
-      </TodoText>
-      <div>
-        {status !== 'completed' && (
-          <Button onClick={() => updateStatus(id, 'in-progress')}>Em andamento</Button>
-        )}
-        {status !== 'pending' && (
-          <Button onClick={() => updateStatus(id, 'pending')}>Voltar</Button>
-        )}
-        <Button onClick={() => deleteTodo(id)}>Deletar</Button>
-      </div>
+    <TodoItemContainer ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
+      <TodoCircle onClick={() => markAsCompleted(todo.id)} completed={todo.status === "completed"} />
+      <TodoText onClick={() => updateTodo(todo)}>{todo.text || "Nova Tarefa"}</TodoText>
     </TodoItemContainer>
   );
 };
