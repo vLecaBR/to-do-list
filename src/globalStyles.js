@@ -7,10 +7,9 @@ export const GlobalStyles = createGlobalStyle`
     padding: 0;
     box-sizing: border-box;
   }
-
   body {
     font-family: Arial, sans-serif;
-    background-color: #f4f5f7;
-    color: #333;
+    background-color: #ececec;
+    padding: 20px;
   }
 `;

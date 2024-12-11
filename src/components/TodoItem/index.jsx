@@ -1,37 +1,44 @@
 // src/components/TodoItem/TodoItem.jsx
 import React, { useState } from 'react';
-import { TodoItemContainer, TodoText, CompleteButton, EditButton } from './TodoItem.styles';
-import Modal from '../Modal';
+import { TodoItemContainer, TodoItemText, TodoItemButton, TodoItemInput } from './TodoItem.styles';
 
-const TodoItem = ({ todo, updateStatus, deleteTodo, handleDragStart }) => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isCompleted, setIsCompleted] = useState(todo.status === 'completed');
+const TodoItem = ({ todo, editTodo, updateStatus, deleteTodo }) => {
+  const [isEditing, setIsEditing] = useState(false);
+  const [newText, setNewText] = useState(todo.text);
 
-  const toggleCompletion = () => {
-    setIsCompleted(!isCompleted);
-    updateStatus(todo.id, isCompleted ? 'pending' : 'completed');
+  // Função para atualizar o texto ao salvar
+  const handleEdit = () => {
+    editTodo(todo.id, { text: newText });
+    setIsEditing(false);
   };
 
-  const openModal = () => setIsModalOpen(true);
-  const closeModal = () => setIsModalOpen(false);
-
   return (
-    <>
-      <TodoItemContainer
-        draggable
-        onDragStart={(e) => handleDragStart(e, todo.id)}
-      >
-        <CompleteButton onClick={toggleCompletion}>{isCompleted ? '✔️' : '⭕'}</CompleteButton>
-        <TodoText completed={isCompleted} onClick={openModal}>
-          {todo.text}
-        </TodoText>
-        <EditButton onClick={openModal}>Editar</EditButton>
-      </TodoItemContainer>
-
-      {isModalOpen && (
-        <Modal todo={todo} closeModal={closeModal} updateStatus={updateStatus} deleteTodo={deleteTodo} />
+    <TodoItemContainer>
+      {isEditing ? (
+        // Aqui temos o campo de input para alterar o nome da tarefa
+        <TodoItemInput
+          type="text"
+          value={newText}
+          onChange={(e) => setNewText(e.target.value)} // Atualiza o novo texto conforme o usuário digita
+        />
+      ) : (
+        // Exibe o nome da tarefa quando não está em edição
+        <TodoItemText>{todo.text}</TodoItemText>
       )}
-    </>
+      
+      {/* Se estiver em edição, mostrar botão de salvar, caso contrário, mostrar botão de editar */}
+      <TodoItemButton onClick={isEditing ? handleEdit : () => setIsEditing(true)}>
+        {isEditing ? 'Salvar' : 'Editar'}
+      </TodoItemButton>
+      
+      {/* Botão para deletar a tarefa */}
+      <TodoItemButton onClick={() => deleteTodo(todo.id)}>Deletar</TodoItemButton>
+      
+      {/* Botão para mover a tarefa de status (exemplo: de 'todo' para 'in-progress') */}
+      <TodoItemButton onClick={() => updateStatus(todo.id, todo.status === 'todo' ? 'in-progress' : 'todo')}>
+        {todo.status === 'todo' ? 'Iniciar' : 'Voltar'}
+      </TodoItemButton>
+    </TodoItemContainer>
   );
 };
 

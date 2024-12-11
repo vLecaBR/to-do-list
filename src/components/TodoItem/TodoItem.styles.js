@@ -2,39 +2,36 @@
 import styled from 'styled-components';
 
 export const TodoItemContainer = styled.div`
-  display: flex;
-  align-items: center;
-  background-color: #fff;
+  background: #ffffff;
+  margin: 10px 0;
   padding: 10px;
-  border-radius: 6px;
-  margin-bottom: 10px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  cursor: pointer;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 `;
 
-export const TodoText = styled.span`
-  flex: 1;
-  text-decoration: ${(props) => (props.completed ? 'line-through' : 'none')};
-  color: ${(props) => (props.completed ? 'gray' : 'black')};
+export const TodoItemText = styled.p`
+  font-size: 1rem;
+  margin: 0;
 `;
 
-export const CompleteButton = styled.button`
-  background: transparent;
-  border: none;
-  font-size: 24px;
-  cursor: pointer;
-  margin-right: 10px;
+export const TodoItemInput = styled.input`
+  font-size: 1rem;
+  padding: 5px;
+  margin: 0;
+  width: 100%;
 `;
 
-export const EditButton = styled.button`
-  background-color: #ffa500;
+export const TodoItemButton = styled.button`
+  background-color: #5e81f4;
   color: white;
   border: none;
   padding: 5px 10px;
   border-radius: 5px;
   cursor: pointer;
+  font-size: 1rem;
+  margin: 5px;
 
   &:hover {
-    background-color: #e08500;
+    background-color: #4a6edb;
   }
 `;
