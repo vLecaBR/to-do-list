@@ -43,7 +43,7 @@ function App() {
     <div>
       <GlobalStyle />
       <Header newTodo={newTodo} setNewTodo={setNewTodo} addTodo={addTodo} />
-      <div style={{ display: 'flex', justifyContent: 'space-around', width: '100%', height: '100%' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', height: '100%' }}>
         <TodoColumn title="Pendente" todos={todos.filter(todo => todo.status === 'pending')} updateStatus={updateStatus} deleteTodo={deleteTodo} />
         <TodoColumn title="Em Progresso" todos={todos.filter(todo => todo.status === 'in-progress')} updateStatus={updateStatus} deleteTodo={deleteTodo} />
         <TodoColumn title="Concluídas" todos={todos.filter(todo => todo.status === 'completed')} updateStatus={updateStatus} deleteTodo={deleteTodo} />

@@ -6,7 +6,7 @@ const GlobalStyle = createGlobalStyle`
     font-family: 'Roboto', sans-serif;
     margin: 0;
     padding: 0;
-    background: linear-gradient(135deg, #4CAF50, #8BC34A);
+    background: linear-gradient(135deg, #f1f1f1, #ffffff); /* Fundo mais suave */
     color: #333;
     display: flex;
     justify-content: center;
@@ -23,6 +23,7 @@ const GlobalStyle = createGlobalStyle`
     width: 100%;
     height: 100%;
     padding: 20px;
+    gap: 30px; /* Espaçamento maior entre as colunas */
   }
 
   * {

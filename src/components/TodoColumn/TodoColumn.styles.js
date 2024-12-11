@@ -2,7 +2,7 @@
 import styled from 'styled-components';
 
 export const TodoColumnContainer = styled.div`
-  width: 30%;
+  width: 30%; /* A largura de cada coluna é de 30% */
   padding: 20px;
   background-color: rgba(255, 255, 255, 0.9);
   border-radius: 8px;
