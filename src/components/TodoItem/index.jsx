@@ -2,13 +2,27 @@
 import React from 'react';
 import { TodoItemContainer, TodoText, Button } from './TodoItem.styles';
 
-const TodoItem = ({ todo, toggleTodo, deleteTodo }) => {
+const TodoItem = ({ todo, updateStatus, deleteTodo }) => {
+  const { id, text, status } = todo;
+
+  const handleStatusChange = (newStatus) => {
+    updateStatus(id, newStatus);
+  };
+
   return (
     <TodoItemContainer>
-      <TodoText completed={todo.completed} onClick={() => toggleTodo(todo.id)}>
-        {todo.text}
+      <TodoText completed={status === 'completed'} onClick={() => handleStatusChange(status === 'completed' ? 'pending' : 'completed')}>
+        {text}
       </TodoText>
-      <Button onClick={() => deleteTodo(todo.id)}>Excluir</Button>
+      <div>
+        {status !== 'completed' && (
+          <Button onClick={() => handleStatusChange('in-progress')}>Em Progresso</Button>
+        )}
+        {status !== 'pending' && (
+          <Button onClick={() => handleStatusChange('pending')}>Voltar</Button>
+        )}
+        <Button onClick={() => deleteTodo(id)}>Deletar</Button>
+      </div>
     </TodoItemContainer>
   );
 };

@@ -5,9 +5,8 @@ export const TodoItemContainer = styled.li`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 15px;
+  padding: 12px;
   background-color: #fff;
-  border: 1px solid #ddd;
   margin: 10px 0;
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
@@ -27,7 +26,7 @@ export const TodoText = styled.span`
 `;
 
 export const Button = styled.button`
-  background-color: #f44336;
+  background-color: #4CAF50;
   color: white;
   border: none;
   padding: 6px 12px;
@@ -37,6 +36,10 @@ export const Button = styled.button`
   transition: background-color 0.3s ease;
 
   &:hover {
-    background-color: #d32f2f;
+    background-color: #45a049;
+  }
+
+  &:not(:last-child) {
+    margin-right: 10px;
   }
 `;
