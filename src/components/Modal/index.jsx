@@ -1,49 +1,29 @@
-import React, { useState } from "react";
+// src/components/Modal/Modal.jsx
+import React, { useState } from 'react';
+import { ModalContainer, ModalContent, ModalCloseButton, Input, Button } from './Modal.styles';
 
-const Modal = ({ todo, updateTodo, setShowModal }) => {
-  const [updatedTodo, setUpdatedTodo] = useState({ ...todo });
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setUpdatedTodo({ ...updatedTodo, [name]: value });
-  };
+const Modal = ({ todo, closeModal, updateStatus, deleteTodo }) => {
+  const [text, setText] = useState(todo.text);
 
   const handleSave = () => {
-    updateTodo(updatedTodo.id, updatedTodo);
+    updateStatus(todo.id, 'pending'); // ou qualquer outro status
+    closeModal();
   };
 
   return (
-    <div style={{ position: "fixed", top: 0, left: 0, width: "100%", height: "100%", background: "rgba(0, 0, 0, 0.5)" }}>
-      <div style={{ background: "#fff", padding: "20px", margin: "50px auto", width: "300px" }}>
-        <h3>Editar Tarefa</h3>
-        <input
-          type="text"
-          name="text"
-          value={updatedTodo.text}
-          onChange={handleChange}
-          placeholder="Nome da tarefa"
+    <ModalContainer>
+      <ModalContent>
+        <ModalCloseButton onClick={closeModal}>X</ModalCloseButton>
+        <h2>Editar Tarefa</h2>
+        <Input
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+          placeholder="Nome da Tarefa"
         />
-        <select name="status" value={updatedTodo.status} onChange={handleChange}>
-          <option value="pending">Pendente</option>
-          <option value="in-progress">Em andamento</option>
-          <option value="completed">Concluída</option>
-        </select>
-        <input
-          type="date"
-          name="startDate"
-          value={updatedTodo.startDate || ""}
-          onChange={handleChange}
-        />
-        <input
-          type="date"
-          name="endDate"
-          value={updatedTodo.endDate || ""}
-          onChange={handleChange}
-        />
-        <button onClick={handleSave}>Salvar</button>
-        <button onClick={() => setShowModal(false)}>Fechar</button>
-      </div>
-    </div>
+        <Button onClick={handleSave}>Salvar</Button>
+        <Button onClick={() => deleteTodo(todo.id)}>Excluir</Button>
+      </ModalContent>
+    </ModalContainer>
   );
 };
 

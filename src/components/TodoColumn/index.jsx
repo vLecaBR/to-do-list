@@ -1,34 +1,22 @@
-import React from "react";
-import { Droppable, Draggable } from "react-beautiful-dnd";
-import TodoItem from "../TodoItem";
-import { TodoColumnContainer, TodoColumnTitle, AddButton } from "./TodoColumn.styles";
+// src/components/TodoColumn/TodoColumn.jsx
+import React from 'react';
+import TodoItem from '../TodoItem';
+import { TodoColumnContainer, TodoColumnTitle, AddButton } from './TodoColumn.styles';
 
-const TodoColumn = ({
-  title,
-  todos,
-  addTodo,
-  markAsCompleted,
-  updateTodo,
-  provided,
-}) => {
+const TodoColumn = ({ title, todos, addTodo, updateStatus, deleteTodo, handleDragStart, handleDrop, handleDragOver }) => {
   return (
-    <TodoColumnContainer ref={provided.innerRef} {...provided.droppableProps}>
+    <TodoColumnContainer onDrop={handleDrop} onDragOver={handleDragOver}>
       <TodoColumnTitle>{title}</TodoColumnTitle>
-      {todos.map((todo, index) => (
-        <Draggable key={todo.id} draggableId={todo.id.toString()} index={index}>
-          {(provided) => (
-            <TodoItem
-              key={todo.id}
-              todo={todo}
-              markAsCompleted={markAsCompleted}
-              updateTodo={updateTodo}
-              provided={provided}
-            />
-          )}
-        </Draggable>
-      ))}
       <AddButton onClick={addTodo}>+</AddButton>
-      {provided.placeholder}
+      {todos.map((todo) => (
+        <TodoItem
+          key={todo.id}
+          todo={todo}
+          updateStatus={updateStatus}
+          deleteTodo={deleteTodo}
+          handleDragStart={handleDragStart}
+        />
+      ))}
     </TodoColumnContainer>
   );
 };

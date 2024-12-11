@@ -1,107 +1,74 @@
-import React, { useState } from "react";
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-import TodoColumn from "./components/TodoColumn";
-import Modal from "./components/Modal";
-import GlobalStyle from "./globalStyles";
+// src/App.jsx
+import React, { useState } from 'react';
+import TodoColumn from './components/TodoColumn';
+import { GlobalStyles } from './globalStyles';
+import { handleDragStart, handleDrop, handleDragOver } from './utils/dragAndDrop';
 
-function App() {
+const App = () => {
   const [todos, setTodos] = useState([]);
-  const [showModal, setShowModal] = useState(false);
-  const [currentTodo, setCurrentTodo] = useState(null);
+  const [todoCounter, setTodoCounter] = useState(1);
 
-  const addTodo = (column) => {
+  const addTodo = (status) => {
     const newTodo = {
-      id: Date.now(),
-      text: "",
-      status: column,
-      startDate: null,
-      endDate: null,
+      id: todoCounter,
+      text: `Tarefa ${todoCounter}`,
+      status,
+      startDate: '',
+      endDate: '',
     };
     setTodos([...todos, newTodo]);
+    setTodoCounter(todoCounter + 1);
   };
 
-  const updateTodo = (id, updatedTodo) => {
-    setTodos(todos.map(todo => (todo.id === id ? updatedTodo : todo)));
-    setShowModal(false);
-  };
-
-  const markAsCompleted = (id) => {
-    setTodos(todos.map(todo => 
-      todo.id === id ? { ...todo, status: "completed" } : todo
-    ));
-  };
-
-  const handleDragEnd = (result) => {
-    const { destination, source } = result;
-    if (!destination) return;
-
-    const updatedTodos = [...todos];
-    const [removed] = updatedTodos.splice(source.index, 1);
-    removed.status = destination.droppableId;
-    updatedTodos.splice(destination.index, 0, removed);
-
+  const updateStatus = (id, newStatus) => {
+    const updatedTodos = todos.map((todo) =>
+      todo.id === id ? { ...todo, status: newStatus } : todo
+    );
     setTodos(updatedTodos);
   };
 
-  const columns = {
-    pending: todos.filter(todo => todo.status === "pending"),
-    inProgress: todos.filter(todo => todo.status === "in-progress"),
-    completed: todos.filter(todo => todo.status === "completed"),
+  const deleteTodo = (id) => {
+    const updatedTodos = todos.filter((todo) => todo.id !== id);
+    setTodos(updatedTodos);
   };
 
   return (
     <>
-      <GlobalStyle />
-      <DragDropContext onDragEnd={handleDragEnd}>
-        <div style={{ display: "flex", gap: "20px", padding: "20px" }}>
-          <Droppable droppableId="pending">
-            {(provided) => (
-              <TodoColumn
-                title="Pendente"
-                todos={columns.pending}
-                addTodo={() => addTodo("pending")}
-                markAsCompleted={markAsCompleted}
-                updateTodo={setCurrentTodo}
-                provided={provided}
-              />
-            )}
-          </Droppable>
-          <Droppable droppableId="inProgress">
-            {(provided) => (
-              <TodoColumn
-                title="Em andamento"
-                todos={columns.inProgress}
-                addTodo={() => addTodo("in-progress")}
-                markAsCompleted={markAsCompleted}
-                updateTodo={setCurrentTodo}
-                provided={provided}
-              />
-            )}
-          </Droppable>
-          <Droppable droppableId="completed">
-            {(provided) => (
-              <TodoColumn
-                title="Concluída"
-                todos={columns.completed}
-                addTodo={() => addTodo("completed")}
-                markAsCompleted={markAsCompleted}
-                updateTodo={setCurrentTodo}
-                provided={provided}
-              />
-            )}
-          </Droppable>
-        </div>
-      </DragDropContext>
-
-      {showModal && (
-        <Modal
-          todo={currentTodo}
-          updateTodo={updateTodo}
-          setShowModal={setShowModal}
+      <GlobalStyles />
+      <div style={{ display: 'flex', justifyContent: 'space-between', padding: '20px' }}>
+        <TodoColumn
+          title="Por Fazer"
+          todos={todos.filter((todo) => todo.status === 'todo')}
+          addTodo={() => addTodo('todo')}
+          updateStatus={updateStatus}
+          deleteTodo={deleteTodo}
+          handleDragStart={handleDragStart}
+          handleDrop={(e) => handleDrop(e, updateStatus)}
+          handleDragOver={handleDragOver}
         />
-      )}
+        <TodoColumn
+          title="Em Andamento"
+          todos={todos.filter((todo) => todo.status === 'in-progress')}
+          addTodo={() => addTodo('in-progress')}
+          updateStatus={updateStatus}
+          deleteTodo={deleteTodo}
+          handleDragStart={handleDragStart}
+          handleDrop={(e) => handleDrop(e, updateStatus)}
+          handleDragOver={handleDragOver}
+        />
+        <TodoColumn
+          title="Concluído"
+          todos={todos.filter((todo) => todo.status === 'completed')}
+          addTodo={() => addTodo('completed')}
+          updateStatus={updateStatus}
+          deleteTodo={deleteTodo}
+          handleDragStart={handleDragStart}
+          handleDrop={(e) => handleDrop(e, updateStatus)}
+          handleDragOver={handleDragOver}
+        />
+      </div>
     </>
   );
-}
+};
 
 export default App;

@@ -1,12 +1,37 @@
-import React from "react";
-import { TodoItemContainer, TodoText, TodoCircle } from "./TodoItem.styles";
+// src/components/TodoItem/TodoItem.jsx
+import React, { useState } from 'react';
+import { TodoItemContainer, TodoText, CompleteButton, EditButton } from './TodoItem.styles';
+import Modal from '../Modal';
 
-const TodoItem = ({ todo, markAsCompleted, updateTodo, provided }) => {
+const TodoItem = ({ todo, updateStatus, deleteTodo, handleDragStart }) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isCompleted, setIsCompleted] = useState(todo.status === 'completed');
+
+  const toggleCompletion = () => {
+    setIsCompleted(!isCompleted);
+    updateStatus(todo.id, isCompleted ? 'pending' : 'completed');
+  };
+
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
+
   return (
-    <TodoItemContainer ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
-      <TodoCircle onClick={() => markAsCompleted(todo.id)} completed={todo.status === "completed"} />
-      <TodoText onClick={() => updateTodo(todo)}>{todo.text || "Nova Tarefa"}</TodoText>
-    </TodoItemContainer>
+    <>
+      <TodoItemContainer
+        draggable
+        onDragStart={(e) => handleDragStart(e, todo.id)}
+      >
+        <CompleteButton onClick={toggleCompletion}>{isCompleted ? '✔️' : '⭕'}</CompleteButton>
+        <TodoText completed={isCompleted} onClick={openModal}>
+          {todo.text}
+        </TodoText>
+        <EditButton onClick={openModal}>Editar</EditButton>
+      </TodoItemContainer>
+
+      {isModalOpen && (
+        <Modal todo={todo} closeModal={closeModal} updateStatus={updateStatus} deleteTodo={deleteTodo} />
+      )}
+    </>
   );
 };
 
