@@ -6,24 +6,25 @@ const GlobalStyle = createGlobalStyle`
     font-family: 'Roboto', sans-serif;
     margin: 0;
     padding: 0;
-    background: linear-gradient(135deg, #f1f1f1, #ffffff); /* Fundo mais suave */
+    background: #F4F7FA; /* Fundo claro */
     color: #333;
     display: flex;
     justify-content: center;
     align-items: flex-start;
     height: 100vh;
-    flex-direction: column;
     overflow: hidden;
   }
 
   #root {
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: flex-start;
     width: 100%;
     height: 100%;
+    gap: 20px; /* Espaçamento entre colunas */
     padding: 20px;
-    gap: 30px; /* Espaçamento maior entre as colunas */
+    flex-direction: row;
+    overflow: auto;
   }
 
   * {

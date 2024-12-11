@@ -1,12 +1,12 @@
 // src/components/TodoItem/TodoItem.styles.js
 import styled from 'styled-components';
 
-export const TodoItemContainer = styled.li`
+export const TodoItemContainer = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 12px;
-  background-color: #fff;
+  background-color: #ffffff;
   margin: 10px 0;
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
@@ -22,7 +22,6 @@ export const TodoText = styled.span`
   cursor: pointer;
   text-decoration: ${({ completed }) => (completed ? 'line-through' : 'none')};
   color: ${({ completed }) => (completed ? '#888' : '#333')};
-  transition: color 0.3s ease;
 `;
 
 export const Button = styled.button`
@@ -33,13 +32,10 @@ export const Button = styled.button`
   border-radius: 8px;
   cursor: pointer;
   font-size: 14px;
+  margin-left: 5px;
   transition: background-color 0.3s ease;
 
   &:hover {
     background-color: #45a049;
-  }
-
-  &:not(:last-child) {
-    margin-right: 10px;
   }
 `;

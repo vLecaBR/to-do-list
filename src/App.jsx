@@ -1,12 +1,11 @@
 // src/App.js
 import React, { useState, useEffect } from 'react';
-import Header from './components/Header';
-import TodoColumn from './components/TodoColumn';
+import TodoColumn from './components/TodoColumn/TodoColumn';
 import GlobalStyle from './globalStyles';
+import { DragDropContext } from 'react-beautiful-dnd';
 
 function App() {
   const [todos, setTodos] = useState([]);
-  const [newTodo, setNewTodo] = useState("");
 
   useEffect(() => {
     const storedTodos = JSON.parse(localStorage.getItem("todos"));
@@ -19,36 +18,70 @@ function App() {
     localStorage.setItem("todos", JSON.stringify(todos));
   }, [todos]);
 
-  const addTodo = () => {
-    if (newTodo.trim() !== "") {
-      const newTodoItem = {
-        id: Date.now(),
-        text: newTodo,
-        status: 'pending', // Inicialmente todas as tarefas começam como "pendentes"
-      };
-      setTodos([...todos, newTodoItem]);
-      setNewTodo("");
-    }
+  const addTodo = (text) => {
+    const newTodo = {
+      id: Date.now(),
+      text: text,
+      status: 'pending', // Inicialmente todas as tarefas começam como "pendente"
+    };
+    setTodos([...todos, newTodo]);
   };
 
-  const updateStatus = (id, status) => {
-    setTodos(todos.map(todo => todo.id === id ? { ...todo, status } : todo));
+  const updateStatus = (id, newStatus) => {
+    setTodos(todos.map(todo => todo.id === id ? { ...todo, status: newStatus } : todo));
   };
 
   const deleteTodo = (id) => {
     setTodos(todos.filter(todo => todo.id !== id));
   };
 
+  const onDragEnd = (result) => {
+    const { destination, source } = result;
+
+    if (!destination) return;
+
+    const newTodos = Array.from(todos);
+    const movedTodo = newTodos[source.index];
+    movedTodo.status = destination.droppableId;
+    newTodos.splice(source.index, 1);
+    newTodos.splice(destination.index, 0, movedTodo);
+
+    setTodos(newTodos);
+  };
+
+  const columns = {
+    pending: todos.filter(todo => todo.status === 'pending'),
+    inProgress: todos.filter(todo => todo.status === 'in-progress'),
+    completed: todos.filter(todo => todo.status === 'completed'),
+  };
+
   return (
-    <div>
+    <DragDropContext onDragEnd={onDragEnd}>
       <GlobalStyle />
-      <Header newTodo={newTodo} setNewTodo={setNewTodo} addTodo={addTodo} />
-      <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', height: '100%' }}>
-        <TodoColumn title="Pendente" todos={todos.filter(todo => todo.status === 'pending')} updateStatus={updateStatus} deleteTodo={deleteTodo} />
-        <TodoColumn title="Em Progresso" todos={todos.filter(todo => todo.status === 'in-progress')} updateStatus={updateStatus} deleteTodo={deleteTodo} />
-        <TodoColumn title="Concluídas" todos={todos.filter(todo => todo.status === 'completed')} updateStatus={updateStatus} deleteTodo={deleteTodo} />
+      <div style={{ display: 'flex', gap: '20px' }}>
+        <TodoColumn
+          title="Pendente"
+          todos={columns.pending}
+          columnId="pending"
+          updateStatus={updateStatus}
+          deleteTodo={deleteTodo}
+        />
+        <TodoColumn
+          title="Em andamento"
+          todos={columns.inProgress}
+          columnId="inProgress"
+          updateStatus={updateStatus}
+          deleteTodo={deleteTodo}
+        />
+        <TodoColumn
+          title="Concluída"
+          todos={columns.completed}
+          columnId="completed"
+          updateStatus={updateStatus}
+          deleteTodo={deleteTodo}
+        />
       </div>
-    </div>
+    </DragDropContext>
   );
 }
 

@@ -1,21 +1,28 @@
 // src/components/TodoColumn/TodoColumn.jsx
 import React from 'react';
-import TodoItem from '../TodoItem';
 import { TodoColumnContainer, TodoColumnTitle } from './TodoColumn.styles';
+import TodoItem from '../TodoItem';
+import { Droppable } from 'react-beautiful-dnd';
 
-const TodoColumn = ({ title, todos, updateStatus, deleteTodo }) => {
+const TodoColumn = ({ title, todos, columnId, updateStatus, deleteTodo }) => {
   return (
-    <TodoColumnContainer>
-      <TodoColumnTitle>{title}</TodoColumnTitle>
-      {todos.map(todo => (
-        <TodoItem
-          key={todo.id}
-          todo={todo}
-          updateStatus={updateStatus}
-          deleteTodo={deleteTodo}
-        />
-      ))}
-    </TodoColumnContainer>
+    <Droppable droppableId={columnId}>
+      {(provided) => (
+        <TodoColumnContainer ref={provided.innerRef} {...provided.droppableProps}>
+          <TodoColumnTitle>{title}</TodoColumnTitle>
+          {todos.map((todo, index) => (
+            <TodoItem
+              key={todo.id}
+              todo={todo}
+              index={index}
+              updateStatus={updateStatus}
+              deleteTodo={deleteTodo}
+            />
+          ))}
+          {provided.placeholder}
+        </TodoColumnContainer>
+      )}
+    </Droppable>
   );
 };
 

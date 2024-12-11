@@ -2,21 +2,19 @@
 import styled from 'styled-components';
 
 export const TodoColumnContainer = styled.div`
-  width: 30%; /* A largura de cada coluna é de 30% */
-  padding: 20px;
-  background-color: rgba(255, 255, 255, 0.9);
+  width: 320px;
+  background: #ffffff;
   border-radius: 8px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 16px;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  height: 90vh;
   overflow-y: auto;
-  height: 80vh;
 `;
 
 export const TodoColumnTitle = styled.h2`
-  font-size: 24px;
-  margin-bottom: 20px;
-  color: #333;
   text-align: center;
+  margin-bottom: 16px;
+  color: #333;
 `;
