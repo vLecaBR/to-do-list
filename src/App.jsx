@@ -50,6 +50,7 @@ const App = () => {
       <div style={{ display: 'flex', justifyContent: 'space-between', padding: '20px' }}>
         <TodoColumn
           title="Por Fazer"
+          status="todo"
           todos={todos.filter((todo) => todo.status === 'todo')}
           addTodo={() => addTodo('todo')}
           editTodo={editTodo}
@@ -58,6 +59,7 @@ const App = () => {
         />
         <TodoColumn
           title="Em Andamento"
+          status="in-progress"
           todos={todos.filter((todo) => todo.status === 'in-progress')}
           addTodo={() => addTodo('in-progress')}
           editTodo={editTodo}
@@ -66,6 +68,7 @@ const App = () => {
         />
         <TodoColumn
           title="Concluído"
+          status="completed"
           todos={todos.filter((todo) => todo.status === 'completed')}
           addTodo={() => addTodo('completed')}
           editTodo={editTodo}

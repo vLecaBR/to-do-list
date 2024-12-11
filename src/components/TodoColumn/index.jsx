@@ -1,17 +1,16 @@
 // src/components/TodoColumn/TodoColumn.jsx
 import React from 'react';
 import TodoItem from '../TodoItem';
-import { TodoColumnContainer, TodoColumnTitle, AddButton } from './TodoColumn.styles';
-import { useDropColumn } from '../../utils/dragAndDrop';
+import { TodoColumnContainer, TodoColumnTitle, TodoColumnButton } from './TodoColumn.styles';
+import { useDropColumn } from '../../utils/dragAndDrop'; // Importando o hook
 
-const TodoColumn = ({ title, todos, addTodo, editTodo, updateStatus, deleteTodo }) => {
-  // Hook para a coluna, passando o status da coluna para atualizar as tarefas ao ser soltas
-  const drop = useDropColumn(title.toLowerCase(), updateStatus);
+const TodoColumn = ({ title, status, todos, addTodo, editTodo, updateStatus, deleteTodo }) => {
+  const drop = useDropColumn(status, updateStatus);
 
   return (
     <TodoColumnContainer ref={drop}>
       <TodoColumnTitle>{title}</TodoColumnTitle>
-      <AddButton onClick={addTodo}>+</AddButton>
+      <TodoColumnButton onClick={addTodo}>+</TodoColumnButton>
       {todos.map((todo) => (
         <TodoItem
           key={todo.id}

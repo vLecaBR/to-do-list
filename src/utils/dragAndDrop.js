@@ -10,17 +10,20 @@ export const useDragItem = (todo) => {
     type: ITEM_TYPE,
     item: { id: todo.id, status: todo.status },
   }));
+
   return drag;
 };
 
 // Hook para tornar a área da coluna receptiva ao item
 export const useDropColumn = (columnStatus, updateStatus) => {
-    const [, drop] = useDrop({
-      accept: 'TODO',
-      drop: (item) => {
+  const [, drop] = useDrop({
+    accept: ITEM_TYPE,
+    drop: (item) => {
+      if (item.status !== columnStatus) {
         updateStatus(item.id, columnStatus); // Atualiza o status da tarefa
-      },
-    });
-  
-    return drop;
-  };
+      }
+    },
+  });
+
+  return drop;
+};
