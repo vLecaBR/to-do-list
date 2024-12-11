@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 
 export const ModalBackground = styled.div`
   position: fixed;
@@ -19,6 +19,7 @@ export const ModalContainer = styled.div`
   width: 600px;
   max-height: 80%;
   overflow-y: auto;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
 `;
 
 export const CloseButton = styled.button`
